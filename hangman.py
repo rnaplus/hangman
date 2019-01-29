@@ -1,26 +1,24 @@
-#!/usr/bin/env python
-# -*- coding: utf-8 -*-
+#!/usr/bin/env python3
 """
-Created on Tue Oct 07 14:04:33 2014
 @author: RNA
 
 A simple game of the classic hangman.
 """
 
+import sys
 import random
 import string
 
 
-WORDLIST_FILENAME = "words.txt"
+WORDLIST_FILENAME = 'words.txt'
+
 
 def loadWords():
-    """
-    Returns a list of valid words. Words are strings of lowercase letters.
-    """
-    print "Loading word list from file..."
+    """Returns a list of valid words. Words are strings of lowercase letters."""
+    sys.stdout.write("Loading word list from file...\n")
     with open(WORDLIST_FILENAME) as f:
         wordlist = f.readline().strip().split()
-    print "  ", len(wordlist), "words loaded."
+    sys.stdout.write('{} words loaded\n'.format(len(wordlist)))
     return wordlist
 
 
@@ -64,7 +62,7 @@ def getGuessedWord(secretWord, lettersGuessed):
     result = ''    
     for l in secretWord:
         if l in lettersGuessed:
-            result += l + ' '
+            result += '{} '.format(l)
         else:
             result += '_ '
     return result
@@ -95,12 +93,12 @@ def printHangman(guessesLeft):
     Print an ascii representation of a hangman. There are 8 different ascii
     files, one for each round.
     """
-    hangman = 'ascii/' + str(guessesLeft) + '.txt'
+    hangman = 'ascii/{}.txt'.format(guessesLeft)
     with open(hangman, 'r') as f:
-        print '\n'        
+        sys.stdout.write('\n')
         for line in f:
-            print line,
-    print '\n'
+            sys.stdout.write(line)
+    sys.stdout.write('\n')
     
 
 def hangman():
@@ -129,34 +127,34 @@ def hangman():
     while playAgain == 'y':
         
         lettersGuessed = []
-        print '\nI am thinking of a word that is ' + str(len(secretWord)) + ' letters long.\n'
+        sys.stdout.write('\nI am thinking of a word that is {} letters long.\n'.format(len(secretWord)))
         rounds = 0
         
         while not isWordGuessed(secretWord, lettersGuessed) and rounds < 8:
             
-            print 'You have ' + str(8-rounds) + ' guesses left.'
-            print 'Available letters: ' + getAvailableLetters(lettersGuessed)
-            guess = str(raw_input('Guess a letter: '))
+            sys.stdout.write('You have {} guesses left.\n'.format(8-rounds))
+            sys.stdout.write('Available letters: {}\n'.format(getAvailableLetters(lettersGuessed)))
+            guess = str(input('Guess a letter: '))
 
             if guess == '' or secretWord.find(guess) == -1:
-                print 'Wrong! That letter is not in my word.'
+                sys.stdout.write('Wrong! That letter is not in my word.\n')
                 rounds += 1
             else:
-                print 'Good guess!'
+                sys.stdout.write('Good guess!\n')
             
             printHangman(8-rounds)
             lettersGuessed.append(guess.lower())        
-            print getGuessedWord(secretWord, lettersGuessed) + '\n'
+            sys.stdout.write(getGuessedWord(secretWord, lettersGuessed) + '\n\n')
         
         if isWordGuessed(secretWord, lettersGuessed):
-            print '\nCongratulations!\nYOU WON THE MONIESSSS!!!!'
+            sys.stdout.write('\nCongratulations!\nYOU WON THE MONIESSSS!!!!\n')
         else:
-            print '\nYOU LOSE!!!!\nThe secret word was: ' + secretWord
+            sys.stdout.write('\nYOU LOSE!!!!\nThe secret word was: {}\n'.format(secretWord))
     
         # Ask if player wants to play again
         playAgain = ''
-        while playAgain not in ['y', 'n']:
-            playAgain = str(raw_input('Play again? \'y\' or \'n\': '))
+        while playAgain not in ('y', 'n'):
+            playAgain = str(input("Play again? 'y' or 'n': "))
             playAgain.lower()
     
 
